@@ -1,0 +1,6 @@
+framework module YQAlertView {
+  umbrella header "YQAlertView-umbrella.h"
+
+  export *
+  module * { export * }
+}

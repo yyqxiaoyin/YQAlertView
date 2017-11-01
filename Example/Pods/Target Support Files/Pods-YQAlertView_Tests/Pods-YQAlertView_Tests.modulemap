@@ -1,0 +1,6 @@
+framework module Pods_YQAlertView_Tests {
+  umbrella header "Pods-YQAlertView_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
