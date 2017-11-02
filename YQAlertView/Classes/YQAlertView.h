@@ -59,6 +59,8 @@ typedef void(^CustumViewTextFieldHandle)(YQAlertAction *action);
 
 + (instancetype)actionWithTextField:(UITextField *)textField handle:(AlertActionTextFieldHandle)handler;
 
++ (instancetype)actionWithTitle:(NSString *)title titleColor:(UIColor *)titleColor handler:(AlertActionNormalHandler)handler;
+
 + (instancetype)actionWithCustumView:(UIView *)customView;
 
 @property (nonatomic, assign, readonly) AlertActionType alertActionType;

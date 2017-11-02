@@ -419,6 +419,9 @@
 
 - (CGFloat)messageLabelTop{
     if (self.messageLabel.text.length || self.messageLabel.attributedText.length) {
+        if (!self.alertTitleLabel.text.length || !self.messageLabel.attributedText.length) {
+            return AdaptedHeight(26+15);
+        }
         return AdaptedHeight(15);
     }
     return 0;
@@ -440,7 +443,7 @@
 }
 
 - (CGFloat)horizontalLineHeight{
-    return (1.0/[UIScreen mainScreen].scale);
+    return (1);
 }
 
 - (CGFloat)textFieldLeftRightMargin{
@@ -639,18 +642,12 @@
 + (instancetype)actionWithTitle:(NSString *)title
                         handler:(AlertActionNormalHandler)handler{
     
-    YQAlertAction *action = [[YQAlertAction alloc]init];
-    action.normalHandler = handler;
-    action.title = title;
-    [action setAlertActionType:AlertActionTypeNormal];
-    
     NSDictionary *attributes = @{
                                  NSFontAttributeName : kFontSize(17),
-                                 NSForegroundColorAttributeName : UIColorFromHex(0xdc4ad2),
+                                 NSForegroundColorAttributeName : UIColorFromHex(666666),
                                  };
     NSAttributedString *attString = [[NSAttributedString alloc]initWithString:title attributes:attributes];
-    [action setupViewsWithNormalWithAttributedTitle:attString];
-    return action;
+    return [self actionWithAttributedTitle:attString handler:handler];
 }
 
 + (instancetype)actionWithAttributedTitle:(NSAttributedString *)attributedTitle handler:(AlertActionNormalHandler)handler{
@@ -660,6 +657,11 @@
     [action setAlertActionType:AlertActionTypeNormal];
     [action setupViewsWithNormalWithAttributedTitle:attributedTitle];
     return action;
+}
+
++ (instancetype)actionWithTitle:(NSString *)title titleColor:(UIColor *)titleColor handler:(AlertActionNormalHandler)handler{
+    NSAttributedString *attTitle = [[NSAttributedString alloc]initWithString:title attributes:@{NSForegroundColorAttributeName : titleColor,NSFontAttributeName : kFontSize(17)}];
+    return [self actionWithAttributedTitle:attTitle handler:handler];
 }
 
 + (instancetype)actionWithTextField:(UITextField *)textField
@@ -768,16 +770,16 @@
     [super layoutSubviews];
 
     if (self.topLineLayer) {
-        self.topLineLayer.frame = CGRectMake(0, 0, self.frame.size.width, 1.0/[UIScreen mainScreen].scale);
+        self.topLineLayer.frame = CGRectMake(0, 0, self.frame.size.width, 1);
     }
     if (self.leftLineLayer) {
-        self.leftLineLayer.frame = CGRectMake(0, 0, 1.0/[UIScreen mainScreen].scale, self.frame.size.height);
+        self.leftLineLayer.frame = CGRectMake(0, 0, 1, self.frame.size.height);
     }
     if (self.bottomLineLayer) {
-        self.bottomLineLayer.frame = CGRectMake(0, self.frame.size.height - 1.0/[UIScreen mainScreen].scale, self.frame.size.width, 1.0/[UIScreen mainScreen].scale);
+        self.bottomLineLayer.frame = CGRectMake(0, self.frame.size.height - 1, self.frame.size.width, 1);
     }
     if (self.rightLineLayer) {
-        self.rightLineLayer.frame = CGRectMake(self.frame.size.width - 1.0/[UIScreen mainScreen].scale, 0, 1.0/[UIScreen mainScreen].scale, self.frame.size.height);
+        self.rightLineLayer.frame = CGRectMake(self.frame.size.width - 1, 0, 1, self.frame.size.height);
     }
 }
 
