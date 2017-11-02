@@ -52,6 +52,6 @@ push_git_tags
 #pod_lib_lint(allow_warnings: true)
 
 #    pod repo push XXX  xxx.podspec
-pod_push
+pod_push(allow_warnings:true)
 
 end
