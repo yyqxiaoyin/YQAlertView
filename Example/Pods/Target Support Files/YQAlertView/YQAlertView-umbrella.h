@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "YQAlertView.h"
 
 FOUNDATION_EXPORT double YQAlertViewVersionNumber;
 FOUNDATION_EXPORT const unsigned char YQAlertViewVersionString[];
