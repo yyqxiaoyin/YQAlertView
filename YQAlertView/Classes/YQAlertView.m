@@ -67,10 +67,10 @@
 
 + (instancetype)alertViewWithTitle:(NSString *)title message:(NSString *)message{
     
-    YQAlertView *backgroundView = [[YQAlertView alloc]init];
-    backgroundView.alertTitleLabel.text = title;
-    backgroundView.messageLabel.text = message;
-    return backgroundView;
+    NSAttributedString *attTitle = [[NSAttributedString alloc]initWithString:title attributes:@{NSForegroundColorAttributeName : UIColorFromHex(0x282828),NSFontAttributeName :kFontSize(17)}];
+    NSAttributedString *attMessage = [[NSAttributedString alloc]initWithString:message attributes:@{NSForegroundColorAttributeName : UIColorFromHex(0x282828),NSFontAttributeName :kFontSize(15)}];
+    
+    return [self alertViewWithAttributedTitle:attTitle attributedmessage:attMessage];
 }
 
 + (instancetype)alertViewWithAttributedTitle:(NSAttributedString *)attributedTitle attributedmessage:(NSAttributedString *)attributedMessage{
@@ -78,6 +78,15 @@
     backgroundView.alertTitleLabel.attributedText = attributedTitle;
     backgroundView.messageLabel.attributedText = attributedMessage;
     return backgroundView;
+}
+
++ (instancetype)alertviewwithAttributedTitle:(NSAttributedString *)attributedTitle messgae:(NSString *)message{
+    return [self alertViewWithAttributedTitle:attributedTitle attributedmessage:[[NSAttributedString alloc]initWithString:message attributes:@{NSFontAttributeName : kFontSize(15)}]];
+}
+
++ (instancetype)alertViewWithTitle:(NSString *)title attributedmessage:(NSAttributedString *)attributedMessage{
+    return [self alertViewWithAttributedTitle:
+            [[NSAttributedString alloc]initWithString:title attributes:@{NSFontAttributeName : kFontSize(17),NSForegroundColorAttributeName : UIColorFromHex(0x282828)}] attributedmessage:attributedMessage];
 }
 
 - (void)addAction:(YQAlertAction *)action{
@@ -409,6 +418,39 @@
     return vflString;
 }
 
+#pragma mark - setter
+- (void)setTitleColor:(UIColor *)titleColor{
+    _titleColor = titleColor;
+    if (self.alertTitleLabel) {
+        NSMutableAttributedString *attTitle = [[NSMutableAttributedString alloc]initWithAttributedString:self.alertTitleLabel.attributedText];
+        [attTitle addAttribute:NSForegroundColorAttributeName value:titleColor range:NSMakeRange(0, self.alertTitleLabel.attributedText.length)];
+        self.alertTitleLabel.attributedText = attTitle;
+    }
+}
+
+- (void)setMessageColor:(UIColor *)messageColor{
+    _messageColor = messageColor;
+    if (self.messageLabel) {
+        NSMutableAttributedString *attMessage = [[NSMutableAttributedString alloc]initWithAttributedString:self.messageLabel.attributedText];
+        [attMessage addAttribute:NSForegroundColorAttributeName value:messageColor range:NSMakeRange(0, self.messageLabel.attributedText.length)];
+        self.messageLabel.attributedText = attMessage;
+    }
+}
+
+- (void)setAttributedTitle:(NSAttributedString *)attributedTitle{
+    _attributedTitle = attributedTitle;
+    if (self.alertTitleLabel) {
+        self.alertTitleLabel.attributedText = attributedTitle;
+    }
+}
+
+- (void)setAttributedMessage:(NSAttributedString *)attributedMessage{
+    _attributedMessage = attributedMessage;
+    if (self.messageLabel) {
+        self.messageLabel.attributedText = attributedMessage;
+    }
+}
+
 #pragma mark - getter
 - (CGFloat)titleLabelTop{
     if (self.alertTitleLabel.text.length || self.alertTitleLabel.attributedText.length) {
@@ -726,6 +768,7 @@
     [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     btn.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:btn];
+    self.button = btn;
     
     NSString *Hvfl = @"H:|[btn]|";
     NSString *Vvfl = @"V:|[btn]|";
@@ -785,6 +828,15 @@
 
 - (void)setAlertActionType:(AlertActionType)alertActionType{
     _alertActionType = alertActionType;
+}
+
+- (void)setTitleColor:(UIColor *)titleColor{
+    _titleColor = titleColor;
+    if (self.button) {
+        NSMutableAttributedString *attString = [[NSMutableAttributedString alloc]initWithAttributedString:self.button.currentAttributedTitle];
+        [attString addAttribute:NSForegroundColorAttributeName value:titleColor range:NSMakeRange(0, self.button.currentAttributedTitle.length)];
+        [self.button setAttributedTitle:attString forState:UIControlStateNormal];
+    }
 }
 
 - (void)btnClick:(UIButton *)sender{

@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'YQAlertView'
-  s.version          = '1.0.0'
-  s.summary          = 'A short description of YQAlertView.'
+  s.version          = '1.0.1'
+  s.summary          = '简单自定义AlertView'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+可以自定义标题 message 样式 可添加自定义view
                        DESC
 
   s.homepage         = "https://github.com/yyqxiaoyin/YQAlertView"

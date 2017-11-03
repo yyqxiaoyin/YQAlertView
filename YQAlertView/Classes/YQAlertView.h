@@ -31,6 +31,36 @@
  */
 + (instancetype)alertViewWithAttributedTitle:(NSAttributedString *)attributedTitle attributedmessage:(NSAttributedString *)attributedMessage;
 
+/**
+ 初始化一个 NSString标题  NSAttributedString信息 的alertView
+ 
+ @param title     带属性标题
+ @param attributedMessage             信息
+ @return                    返回一个警告框对象
+ */
++ (instancetype)alertViewWithTitle:(NSString *)title attributedmessage:(NSAttributedString *)attributedMessage;
+
+/**
+ 初始化一个 NSAttributedString标题  NSString信息 的alertView
+ 
+ @param attributedTitle     带属性标题
+ @param message             信息
+ @return                    返回一个警告框对象
+ */
++ (instancetype)alertviewwithAttributedTitle:(NSAttributedString *)attributedTitle messgae:(NSString *)message;
+
+/** 标题颜色 */
+@property (nonatomic ,strong) UIColor *titleColor;
+
+/** 信息颜色 */
+@property (nonatomic ,strong) UIColor *messageColor;
+
+/** 标题属性文字 */
+@property (nonatomic ,strong) NSAttributedString *attributedTitle;
+
+/** 信息属性文字 */
+@property (nonatomic ,strong) NSAttributedString *attributedMessage;
+
 - (void)addAction:(YQAlertAction *)action;
 
 - (void)show;
@@ -64,6 +94,8 @@ typedef void(^CustumViewTextFieldHandle)(YQAlertAction *action);
 + (instancetype)actionWithCustumView:(UIView *)customView;
 
 @property (nonatomic, assign, readonly) AlertActionType alertActionType;
+
+@property (nonatomic ,strong) UIColor *titleColor;
 
 - (void)setBorderWithTop:(BOOL)top left:(BOOL)left bottom:(BOOL)bottom right:(BOOL)right borderColor:(UIColor *)color;
 
