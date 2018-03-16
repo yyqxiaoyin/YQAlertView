@@ -1,5 +1,5 @@
 PODS:
-  - YQAlertView (1.1.2)
+  - YQAlertView (1.2.0)
 
 DEPENDENCIES:
   - YQAlertView (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  YQAlertView: 89c25d38ca3e875c671467cf3dd36b031da5655a
+  YQAlertView: 00742a407c1965512c3953a23d5142affc767c1e
 
 PODFILE CHECKSUM: 490afee45b342199d14a3c82666f39fb183d6a71
 
