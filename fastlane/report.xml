@@ -5,47 +5,49 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: cocoapods" time="2.627513">
+      <testcase classname="fastlane.lanes" name="0: cocoapods" time="3.253401">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: git_add" time="0.03174">
+      <testcase classname="fastlane.lanes" name="1: git_add" time="0.024458">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: git_commit" time="0.06092">
+      <testcase classname="fastlane.lanes" name="2: git_commit" time="0.038456">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: push_to_git_remote" time="3.973151">
+      <testcase classname="fastlane.lanes" name="3: push_to_git_remote" time="8.343384">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: git_tag_exists" time="0.019112">
+      <testcase classname="fastlane.lanes" name="4: git_tag_exists" time="0.013477">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: remove_tag" time="12.363939">
+      <testcase classname="fastlane.lanes" name="5: remove_tag" time="11.652987">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: add_git_tag" time="0.021744">
+      <testcase classname="fastlane.lanes" name="6: add_git_tag" time="0.021816">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: push_git_tags" time="3.360575">
+      <testcase classname="fastlane.lanes" name="7: push_git_tags" time="3.954602">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: pod_push" time="71.107722">
+      <testcase classname="fastlane.lanes" name="8: pod_push" time="170.940337">
+        
+          <failure message="/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/actions/actions_helper.rb:48:in `execute_action'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:236:in `block in execute_action'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:231:in `chdir'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:231:in `execute_action'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:157:in `trigger_action_by_name'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/fast_file.rb:148:in `method_missing'&#10;Fastfile:55:in `block in parsing_binding'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/lane.rb:33:in `call'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/lane_manager.rb:57:in `cruise_lane'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/command_line_handler.rb:36:in `handle'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/commands_generator.rb:108:in `block (2 levels) in run'&#10;/Library/Ruby/Gems/2.3.0/gems/commander-fastlane-4.4.6/lib/commander/command.rb:178:in `call'&#10;/Library/Ruby/Gems/2.3.0/gems/commander-fastlane-4.4.6/lib/commander/command.rb:153:in `run'&#10;/Library/Ruby/Gems/2.3.0/gems/commander-fastlane-4.4.6/lib/commander/runner.rb:476:in `run_active_command'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:75:in `run!'&#10;/Library/Ruby/Gems/2.3.0/gems/commander-fastlane-4.4.6/lib/commander/delegates.rb:15:in `run!'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/commands_generator.rb:333:in `run'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/commands_generator.rb:42:in `start'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/fastlane/lib/fastlane/cli_tools_distributor.rb:98:in `take_off'&#10;/Library/Ruby/Gems/2.3.0/gems/fastlane-2.85.0/bin/fastlane:20:in `&lt;top (required)&gt;'&#10;/usr/local/bin/fastlane:22:in `load'&#10;/usr/local/bin/fastlane:22:in `&lt;main&gt;'&#10;&#10;Exit status of command 'pod trunk push --allow-warnings' was 1 instead of 0.&#10;[32m&#10;[!] Found podspec `YQAlertView.podspec`[0m&#10;Updating spec repo `master`&#10;&#10;CocoaPods 1.4.0 is available.&#10;To update use: `sudo gem install cocoapods`&#10;&#10;For more information, see https://blog.cocoapods.org and the CHANGELOG for this version at https://github.com/CocoaPods/CocoaPods/releases/tag/1.4.0&#10;&#10;Validating podspec&#10; -&gt; YQAlertView -&gt; YQAlertView (1.1.0)&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:102:86: warning: values of type 'NSUInteger' should not be used as format arguments; add an explicit cast to 'unsigned long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:337:132: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:343:149: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:347:113: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:352:106: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:389:27: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:389:50: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:389:74: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:398:108: warning: values of type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:404:76: warning: values of type 'NSUInteger' should not be used as format arguments; add an explicit cast to 'unsigned long' instead [-Wformat]&#10;    - WARN  | [iOS] xcodebuild:  YQAlertView/YQAlertView/Classes/YQAlertView.m:411:116: warning: values of type 'NSUInteger' should not be used as format arguments; add an explicit cast to 'unsigned long' instead [-Wformat]&#10;&#10;[!] Unable to accept duplicate entry for: YQAlertView (1.1.0)&#10;" />
         
       </testcase>
     
