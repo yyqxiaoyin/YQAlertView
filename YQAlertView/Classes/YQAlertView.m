@@ -40,6 +40,9 @@
 /** action对应字典  eg: @"action0":action */
 @property (nonatomic ,strong) NSMutableDictionary *actionsDic;
 
+/** AlertActionTypeNormal 类型的action */
+@property (nonatomic ,strong) NSMutableArray *normalActions;
+
 @property (nonatomic, assign) BOOL isCustom;
 
 @end
@@ -61,38 +64,52 @@
     if (self = [super init]) {
         self.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.7];
         self.frame = [UIScreen mainScreen].bounds;
+        self.shouldShowLine = YES;
     }
     return self;
 }
 
 + (instancetype)alertViewWithTitle:(NSString *)title message:(NSString *)message{
-    
+    if (!title) {
+        title = @"";
+    }
+    if (!message) {
+        message = @"";
+    }
     NSAttributedString *attTitle = [[NSAttributedString alloc]initWithString:title attributes:@{NSForegroundColorAttributeName : UIColorFromHex(0x282828),NSFontAttributeName :kFontSize(17)}];
     NSAttributedString *attMessage = [[NSAttributedString alloc]initWithString:message attributes:@{NSForegroundColorAttributeName : UIColorFromHex(0x282828),NSFontAttributeName :kFontSize(15)}];
     
-    return [self alertViewWithAttributedTitle:attTitle attributedmessage:attMessage];
+    return [self alertViewWithAttributedTitle:attTitle attributedMessage:attMessage];
 }
 
-+ (instancetype)alertViewWithAttributedTitle:(NSAttributedString *)attributedTitle attributedmessage:(NSAttributedString *)attributedMessage{
++ (instancetype)alertViewWithAttributedTitle:(NSAttributedString *)attributedTitle attributedMessage:(NSAttributedString *)attributedMessage{
     YQAlertView *backgroundView = [[YQAlertView alloc]init];
     backgroundView.alertTitleLabel.attributedText = attributedTitle;
     backgroundView.messageLabel.attributedText = attributedMessage;
     return backgroundView;
 }
 
-+ (instancetype)alertviewwithAttributedTitle:(NSAttributedString *)attributedTitle messgae:(NSString *)message{
-    return [self alertViewWithAttributedTitle:attributedTitle attributedmessage:[[NSAttributedString alloc]initWithString:message attributes:@{NSFontAttributeName : kFontSize(15)}]];
++ (instancetype)alertviewWithAttributedTitle:(NSAttributedString *)attributedTitle messgae:(NSString *)message{
+    if (!message) {
+        message = @"";
+    }
+    return [self alertViewWithAttributedTitle:attributedTitle attributedMessage:[[NSAttributedString alloc]initWithString:message attributes:@{NSFontAttributeName : kFontSize(15)}]];
 }
 
-+ (instancetype)alertViewWithTitle:(NSString *)title attributedmessage:(NSAttributedString *)attributedMessage{
++ (instancetype)alertViewWithTitle:(NSString *)title attributedMessage:(NSAttributedString *)attributedMessage{
+    if (!title) {
+        title = @"";
+    }
     return [self alertViewWithAttributedTitle:
-            [[NSAttributedString alloc]initWithString:title attributes:@{NSFontAttributeName : kFontSize(17),NSForegroundColorAttributeName : UIColorFromHex(0x282828)}] attributedmessage:attributedMessage];
+            [[NSAttributedString alloc]initWithString:title attributes:@{NSFontAttributeName : kFontSize(17),NSForegroundColorAttributeName : UIColorFromHex(0x282828)}] attributedMessage:attributedMessage];
 }
 
 - (void)addAction:(YQAlertAction *)action{
     
     if (action.alertActionType == AlertActionTypeCustom) {
         self.isCustom = YES;
+    }else if (action.alertActionType == AlertActionTypeNormal){
+        [self.normalActions addObject:action];
     }
     
     [self.alertView addSubview:action];
@@ -105,12 +122,15 @@
 
 - (void)backgroundTap{
     [self endEditing:YES];
+    if (self.shouldTouchHide) {
+        [self hide];
+    }
 }
 
 - (void)show{
     
+    [self setAppearanceStyle];
     [self addViewsConstraints];
-    
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 1;
     }];
@@ -124,8 +144,34 @@
     [_alertView.layer addAnimation:animation forKey:@"YQAlertViewAnimation"];
     
 }
-- (void)hide{
+
+- (void)showWithHideDelay:(NSTimeInterval)delay{
+    [self show];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self hide];
+    });
+}
+
+- (void)setShouldTouchHide:(BOOL)shouldTouchHide{
+    _shouldTouchHide = shouldTouchHide;
+}
+
+- (void)setShouldShowLine:(BOOL)shouldShowLine{
+    _shouldShowLine = shouldShowLine;
+}
+
+- (void)setAppearanceStyle{
+    UIColor *color = [YQAlertView appearance].lastButtonActionColor;
+    if (color) {
+        if (self.normalActions.count) {
+            YQAlertAction *lastAction = [self.normalActions lastObject];
+            lastAction.titleColor = color;
+        }
+    }
     
+}
+
+- (void)hideWithCompletion:(dispatch_block_t)completion{
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {
@@ -136,8 +182,29 @@
         }
         [_alertView removeFromSuperview];
         [self removeFromSuperview];
+        if (completion) {
+            completion();
+        }
     }];
+}
+
+- (void)hide{
     
+    [self hideWithCompletion:nil];
+}
+
++ (void)hide{
+    [self hideWithCompletion:nil];
+}
+
++ (void)hideWithCompletion:(dispatch_block_t)completion{
+    UIWindow *keyWindow = [[UIApplication sharedApplication].windows firstObject];
+    NSArray *subviews = keyWindow.subviews;
+    for (UIView *view in subviews) {
+        if ([view isKindOfClass:self]) {
+            [(YQAlertView *)view hideWithCompletion:completion];
+        }
+    }
 }
 
 #pragma mark - 监听键盘通知
@@ -209,7 +276,7 @@
     [self alertView];
     [self alertTitleLabel];
     [self messageLabel];
-//    [self horizontalLine];
+    //    [self horizontalLine];
     
     [_alertView removeConstraints:_alertView.constraints];
     
@@ -277,7 +344,7 @@
         NSString *vVfl = @"V:[_alertTitleLabel]-messageLabelTop-[_messageLabel]";
         
         if (self.actions.count) {//有action，需要横向分割线
-//            [self horizontalLine];
+            //            [self horizontalLine];
             
             //actions
             vVfl = [self joinActionsContraintVFLString:vVfl];
@@ -294,8 +361,8 @@
         NSMutableDictionary *views = [NSMutableDictionary dictionaryWithDictionary:self.actionsDic];
         [views setObject:_messageLabel forKey:@"_messageLabel"];
         [views setObject:_alertTitleLabel forKey:@"_alertTitleLabel"];
-//        [views setObject:_horizontalLine forKey:@"_horizontalLine"];
-
+        //        [views setObject:_horizontalLine forKey:@"_horizontalLine"];
+        
         [self addConstraints:[NSLayoutConstraint
                               constraintsWithVisualFormat:@"H:|-titleLeftRightMargin-[_messageLabel]-titleLeftRightMargin-|"
                               options:0
@@ -357,64 +424,64 @@
     }
     
     //横向分割线
-//    [self addConstraints:[NSLayoutConstraint
-//                          constraintsWithVisualFormat:@"H:|[_horizontalLine]|"
-//                          options:0
-//                          metrics:nil
-//                          views:NSDictionaryOfVariableBindings(_horizontalLine)]];
-//    vflString = [vflString stringByAppendingString:@"-horizontalLineTop-[_horizontalLine(==horizontalLineHeight)]"];
+    //    [self addConstraints:[NSLayoutConstraint
+    //                          constraintsWithVisualFormat:@"H:|[_horizontalLine]|"
+    //                          options:0
+    //                          metrics:nil
+    //                          views:NSDictionaryOfVariableBindings(_horizontalLine)]];
+    //    vflString = [vflString stringByAppendingString:@"-horizontalLineTop-[_horizontalLine(==horizontalLineHeight)]"];
     vflString = [vflString stringByAppendingString:@"-horizontalLineTop-"];
     
     
     //拼接按钮的约束
     if (normalActions.count == 2) {
-
-//        [self verticalLine];
-
+        
+        //        [self verticalLine];
+        
         NSMutableDictionary *views = [NSMutableDictionary dictionaryWithDictionary:[self actionsDic]];
-//        [views setObject:_verticalLine forKey:@"_verticalLine"];
+        //        [views setObject:_verticalLine forKey:@"_verticalLine"];
         
         YQAlertAction *action0 = normalActions[0];
         YQAlertAction *action1 = normalActions[1];
         
-        [action0 setBorderWithTop:YES left:NO bottom:NO right:YES borderColor:UIColorFromHex(0xe1e1e1)];
-        [action1 setBorderWithTop:YES left:NO bottom:NO right:NO borderColor:UIColorFromHex(0xe1e1e1)];
+        [action0 setBorderWithTop:self.shouldShowLine left:NO bottom:NO right:self.shouldShowLine borderColor:UIColorFromHex(0xe1e1e1)];
+        [action1 setBorderWithTop:self.shouldShowLine left:NO bottom:NO right:NO borderColor:UIColorFromHex(0xe1e1e1)];
         
         NSInteger firstIndexInAllActions = [self.actions indexOfObject:action0];
         NSInteger secondIndexInAllActions = [self.actions indexOfObject:action1];
         
-//        NSString *hVfl = [NSString stringWithFormat:@"H:|[action%lu][_verticalLine(horizontalLineHeight)][action%lu(==action%lu)]|",
-//                          firstIndexInAllActions,secondIndexInAllActions,firstIndexInAllActions];
+        //        NSString *hVfl = [NSString stringWithFormat:@"H:|[action%lu][_verticalLine(horizontalLineHeight)][action%lu(==action%lu)]|",
+        //                          firstIndexInAllActions,secondIndexInAllActions,firstIndexInAllActions];
         NSString *hVfl = [NSString stringWithFormat:@"H:|[action%lu][action%lu(==action%lu)]|",
                           firstIndexInAllActions,secondIndexInAllActions,firstIndexInAllActions];
-
+        
         [self addConstraints:[NSLayoutConstraint
                               constraintsWithVisualFormat:hVfl
                               options:NSLayoutFormatAlignAllTop|NSLayoutFormatAlignAllBottom
                               metrics:[self metrics]
                               views:views]];
-
-
+        
+        
         return [vflString stringByAppendingString:[NSString stringWithFormat:@"[action%lu(actionHeight)]|",firstIndexInAllActions]];
-
+        
     }else{
         for (NSInteger i = 0; i<normalActions.count; i++) {
             YQAlertAction *action = normalActions[i];
-            [action setBorderWithTop:YES left:NO bottom:NO right:NO borderColor:UIColorFromHex(0xe1e1e1)];
+            [action setBorderWithTop:self.shouldShowLine left:NO bottom:NO right:NO borderColor:UIColorFromHex(0xe1e1e1)];
             NSString *hVfl = [NSString stringWithFormat:@"H:|[action%lu]|",[self.actions indexOfObject:normalActions[i]]];
             [self addConstraints:[NSLayoutConstraint
                                   constraintsWithVisualFormat:hVfl
                                   options:0
                                   metrics:[self metrics]
                                   views:[self actionsDic]]];
-
+            
             vflString = [vflString stringByAppendingString:[NSString stringWithFormat:@"[action%lu(actionHeight)]",[self.actions indexOfObject:normalActions[i]]]];
             if (i == normalActions.count - 1) {
                 vflString = [vflString stringByAppendingString:@"|"];
             }
         }
     }
-
+    
     return vflString;
 }
 
@@ -454,7 +521,7 @@
 #pragma mark - getter
 - (CGFloat)titleLabelTop{
     if (self.alertTitleLabel.text.length || self.alertTitleLabel.attributedText.length) {
-        return AdaptedHeight(26);
+        return AdaptedHeight(23);
     }
     return 0;
 }
@@ -462,7 +529,7 @@
 - (CGFloat)messageLabelTop{
     if (self.messageLabel.text.length || self.messageLabel.attributedText.length) {
         if (!self.alertTitleLabel.text.length || !self.messageLabel.attributedText.length) {
-            return AdaptedHeight(26+15);
+            return AdaptedHeight(23+15);
         }
         return AdaptedHeight(15);
     }
@@ -485,7 +552,10 @@
 }
 
 - (CGFloat)horizontalLineHeight{
-    return (1);
+    if (!_shouldShowLine) {
+        return 0;
+    }
+    return AdaptedWidth(1);
 }
 
 - (CGFloat)textFieldLeftRightMargin{
@@ -536,7 +606,7 @@
         _alertView.clipsToBounds = YES;
         _alertView.bounds = CGRectMake(0, 0, SCREEN_WIDTH - AdaptedWidth(60), AdaptedHeight(173));
         [self addSubview:_alertView];
-
+        
         _alertView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _alertView;
@@ -584,6 +654,13 @@
         _actionsDic = [NSMutableDictionary dictionary];
     }
     return _actionsDic;
+}
+
+- (NSMutableArray *)normalActions{
+    if (!_normalActions) {
+        _normalActions = [NSMutableArray array];
+    }
+    return _normalActions;
 }
 
 //- (UIView *)horizontalLine{
@@ -683,10 +760,18 @@
 
 + (instancetype)actionWithTitle:(NSString *)title
                         handler:(AlertActionNormalHandler)handler{
+    if (!title) {
+        title = @"";
+    }
+    UIColor *color = UIColorFromHex(666666);
+    //    YQAlertView *alertView = [YQAlertView appearance];
+    //    if (alertView.lastButtonActionColor) {
+    //        color = alertView.lastButtonActionColor;
+    //    }
     
     NSDictionary *attributes = @{
                                  NSFontAttributeName : kFontSize(17),
-                                 NSForegroundColorAttributeName : UIColorFromHex(666666),
+                                 NSForegroundColorAttributeName : color,
                                  };
     NSAttributedString *attString = [[NSAttributedString alloc]initWithString:title attributes:attributes];
     return [self actionWithAttributedTitle:attString handler:handler];
@@ -702,6 +787,9 @@
 }
 
 + (instancetype)actionWithTitle:(NSString *)title titleColor:(UIColor *)titleColor handler:(AlertActionNormalHandler)handler{
+    if (!title) {
+        title = @"";
+    }
     NSAttributedString *attTitle = [[NSAttributedString alloc]initWithString:title attributes:@{NSForegroundColorAttributeName : titleColor,NSFontAttributeName : kFontSize(17)}];
     return [self actionWithAttributedTitle:attTitle handler:handler];
 }
@@ -759,7 +847,14 @@
     
     [self addConstraints:Hconstraints];
     [self addConstraints:Vconstraints];
+    
+}
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor{
+    _backgroundColor = backgroundColor;
+    if (self.button) {
+        self.button.backgroundColor = backgroundColor;
+    }
 }
 
 - (void)setupViewsWithNormalWithAttributedTitle:(NSAttributedString *)attString{
@@ -811,7 +906,7 @@
 
 - (void)layoutSubviews{
     [super layoutSubviews];
-
+    
     if (self.topLineLayer) {
         self.topLineLayer.frame = CGRectMake(0, 0, self.frame.size.width, 1);
     }
@@ -832,7 +927,7 @@
 
 - (void)setTitleColor:(UIColor *)titleColor{
     _titleColor = titleColor;
-    if (self.button) {
+    if (self.button && self.button.currentAttributedTitle.length) {
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc]initWithAttributedString:self.button.currentAttributedTitle];
         [attString addAttribute:NSForegroundColorAttributeName value:titleColor range:NSMakeRange(0, self.button.currentAttributedTitle.length)];
         [self.button setAttributedTitle:attString forState:UIControlStateNormal];
@@ -862,3 +957,4 @@
 }
 
 @end
+
