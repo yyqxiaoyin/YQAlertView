@@ -1,6 +1,6 @@
 {
   "name": "YQAlertView",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "summary": "简单自定义AlertView",
   "description": "可以自定义标题 message 样式 可添加自定义view",
   "homepage": "https://github.com/yyqxiaoyin/YQAlertView",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/yyqxiaoyin/YQAlertView.git",
-    "tag": "1.5.0"
+    "tag": "1.5.1"
   },
   "platforms": {
     "ios": "8.0"
