@@ -2,10 +2,9 @@ use_frameworks!
 
 target 'YQAlertView_Example' do
   pod 'YQAlertView', :path => '../'
-
   target 'YQAlertView_Tests' do
     inherit! :search_paths
-
+    
     
   end
 end

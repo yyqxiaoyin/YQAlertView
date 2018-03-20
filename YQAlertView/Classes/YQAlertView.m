@@ -601,8 +601,8 @@
 - (UIView *)alertView{
     if (!_alertView) {
         _alertView = [[UIView alloc] init];
-        _alertView.backgroundColor = UIColorFromHex(0xf7f7f7);
-        _alertView.layer.cornerRadius = 5;
+        _alertView.backgroundColor = [UIColor whiteColor];
+        _alertView.layer.cornerRadius = AdaptedHeight(10);
         _alertView.clipsToBounds = YES;
         _alertView.bounds = CGRectMake(0, 0, SCREEN_WIDTH - AdaptedWidth(60), AdaptedHeight(173));
         [self addSubview:_alertView];
@@ -854,6 +854,20 @@
     _backgroundColor = backgroundColor;
     if (self.button) {
         self.button.backgroundColor = backgroundColor;
+    }
+}
+
+- (void)setNomalBackgroundImage:(UIImage *)nomalBackgroundImage{
+    _nomalBackgroundImage = nomalBackgroundImage;
+    if (self.button) {
+        [self.button setBackgroundImage:nomalBackgroundImage forState:UIControlStateNormal];
+    }
+}
+
+- (void)setHighlightedBackgroundImage:(UIImage *)highlightedBackgroundImage{
+    _highlightedBackgroundImage = highlightedBackgroundImage;
+    if (self.button) {
+        [self.button setBackgroundImage:highlightedBackgroundImage forState:UIControlStateHighlighted];
     }
 }
 

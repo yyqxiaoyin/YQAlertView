@@ -9,6 +9,25 @@
 #import "YQViewController.h"
 #import "YQAlertView.h"
 #import "UIColor+YYQExtension.h"
+#import "UIImage+YQPAdd.h"
+#import <YYKit/YYKit.h>
+
+//获取屏幕宽高
+#define KScreenWidth ([[UIScreen mainScreen] bounds].size.width)
+#define KScreenHeight [[UIScreen mainScreen] bounds].size.height
+#define kScreen_Bounds [UIScreen mainScreen].bounds
+#define KScale [UIScreen mainScreen].scale
+#define KAPixel  (1.0/KScale)
+
+#define Iphone6ScaleWidth KScreenWidth/375.0
+#define Iphone6ScaleHeight KScreenHeight/667.0
+//根据ip6的屏幕来拉伸
+#define kRealWidthValue(with) ((with)*(KScreenWidth/375.0f))
+#define kRealHeightValue(height) ((height)*(KScreenHeight/667.0f))
+
+//内容高度
+#define KbodyHeight KScreenHeight-kTabBarHeight-kTopHeight
+#define KBodyHeightValue(height) ((height)*((KbodyHeight)/554.0f))
 
 #define UIColorFromHex(s) [UIColor colorWithRed:(((s & 0xFF0000) >> 16))/255.0 green:(((s &0xFF00) >>8))/255.0 blue:((s &0xFF))/255.0 alpha:1.0]
 #define THEME_COLOR [UIColor colorWithHexColorString:@"bb67bf"] /**< 浅紫色 */
@@ -42,7 +61,34 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     
-    [self seven];
+    NSArray *titles = @[@"取消",@"确定"];
+    YQAlertView *alertView = [YQAlertView alertViewWithTitle:@"提示" message:@"确定要退出登录吗?"];
+    alertView.titleColor = UIColorFromHex(0xFF9E05);
+    [titles enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        YQAlertAction *action = [YQAlertAction actionWithTitle:obj handler:^(YQAlertAction *action) {
+        }];
+        
+//        UIImage *image = [UIImage imageWithGradientWithFromColor:UIColorFromHex(0xDD5607) toColor:UIColorFromHex(0xE59904) size:CGSizeMake(kRealWidthValue(240), kRealHeightValue(34)) cornerRadius:0];
+//        UIImage *image1 = [UIImage imageWithGradientWithFromColor:UIColorFromHex(0xFF6C16) toColor:UIColorFromHex(0xFFA901) size:CGSizeMake(kRealWidthValue(240), kRealHeightValue(34)) cornerRadius:0];
+        if (idx == 1) {
+            action.nomalBackgroundImage = [UIImage imageWithColor:UIColorFromHex(0xFF9E05)];
+            action.highlightedBackgroundImage = [UIImage imageWithColor:UIColorFromHex(0xEE9100)];
+        }
+        if (idx == 0) {
+            action.nomalBackgroundImage= [UIImage imageWithColor:[UIColor whiteColor]];
+            action.highlightedBackgroundImage = [UIImage imageWithColor:UIColorFromHex(0xE0E0E0)];
+        }
+        
+        
+        action.titleColor = UIColorFromHex(0x999999);
+        if (idx == titles.count - 1) {
+//            action.backgroundColor = UIColorFromHex(0xFF9E05);
+            action.titleColor = [UIColor whiteColor];
+        }
+        [alertView addAction:action];
+    }];
+    
+    [alertView show];
     
 }
 
@@ -129,41 +175,41 @@
 }
 
 - (void)five{
-    NSString *city = [NSString stringWithFormat:@"定位到您当前的城市是%@，是否切换城市？",@"深圳"];
-    NSMutableAttributedString *attString = [[NSMutableAttributedString alloc]initWithString:city];
-    NSRange range = [city rangeOfString:@"深圳"];
-    [attString addAttribute:NSForegroundColorAttributeName value:C5Color range:NSMakeRange(0, attString.length)];
-    [attString addAttribute:NSForegroundColorAttributeName value:C8Color range:range];
-//    [attString setYy_color:C5Color];
-//    [attString yy_setColor:C8Color range:range];
-    
-    YQAlertView *alert = [YQAlertView alertViewWithAttributedTitle:nil attributedmessage:attString];
-    YQAlertAction *actionCancel = [YQAlertAction actionWithTitle:@"取消" titleColor:C4Color handler:^(YQAlertAction *action) {
-        
-    }];
-    YQAlertAction *actionEnsure = [YQAlertAction actionWithTitle:@"切换" titleColor:C8Color handler:^(YQAlertAction *action) {
-        
-    }];
-    [alert addAction:actionCancel];
-    [alert addAction:actionEnsure];
-    [alert show];
+//    NSString *city = [NSString stringWithFormat:@"定位到您当前的城市是%@，是否切换城市？",@"深圳"];
+//    NSMutableAttributedString *attString = [[NSMutableAttributedString alloc]initWithString:city];
+//    NSRange range = [city rangeOfString:@"深圳"];
+//    [attString addAttribute:NSForegroundColorAttributeName value:C5Color range:NSMakeRange(0, attString.length)];
+//    [attString addAttribute:NSForegroundColorAttributeName value:C8Color range:range];
+////    [attString setYy_color:C5Color];
+////    [attString yy_setColor:C8Color range:range];
+//
+//    YQAlertView *alert = [YQAlertView alertViewWithAttributedTitle:nil attributedmessage:attString];
+//    YQAlertAction *actionCancel = [YQAlertAction actionWithTitle:@"取消" titleColor:C4Color handler:^(YQAlertAction *action) {
+//
+//    }];
+//    YQAlertAction *actionEnsure = [YQAlertAction actionWithTitle:@"切换" titleColor:C8Color handler:^(YQAlertAction *action) {
+//
+//    }];
+//    [alert addAction:actionCancel];
+//    [alert addAction:actionEnsure];
+//    [alert show];
 }
 
 - (void)fourth{
     
     
-    NSAttributedString *title = [[NSAttributedString alloc]initWithString:@"客服热线" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:C5Color}];
-    NSAttributedString *message = [[NSAttributedString alloc]initWithString:@"400-998-8022" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:C8Color}];
-    YQAlertView *alert = [YQAlertView alertViewWithAttributedTitle:title attributedmessage:message];
-    YQAlertAction *cancel = [YQAlertAction actionWithTitle:@"取消" titleColor:C8Color handler:^(YQAlertAction *action) {
-        
-    }];;
-    YQAlertAction *sure = [YQAlertAction actionWithTitle:@"呼叫" titleColor:C8Color handler:^(YQAlertAction *action) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tel://400-998-8022"]];
-    }];
-    [alert addAction:cancel];
-    [alert addAction:sure];
-    [alert show];
+//    NSAttributedString *title = [[NSAttributedString alloc]initWithString:@"客服热线" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:C5Color}];
+//    NSAttributedString *message = [[NSAttributedString alloc]initWithString:@"400-998-8022" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:C8Color}];
+//    YQAlertView *alert = [YQAlertView alertViewWithAttributedTitle:title attributedmessage:message];
+//    YQAlertAction *cancel = [YQAlertAction actionWithTitle:@"取消" titleColor:C8Color handler:^(YQAlertAction *action) {
+//
+//    }];;
+//    YQAlertAction *sure = [YQAlertAction actionWithTitle:@"呼叫" titleColor:C8Color handler:^(YQAlertAction *action) {
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tel://400-998-8022"]];
+//    }];
+//    [alert addAction:cancel];
+//    [alert addAction:sure];
+//    [alert show];
 }
 
 - (void)third{

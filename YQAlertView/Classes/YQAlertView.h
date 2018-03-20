@@ -109,6 +109,10 @@ typedef void(^CustumViewTextFieldHandle)(YQAlertAction *action);
 
 @property (nonatomic ,strong) UIColor *backgroundColor;
 
+@property (nonatomic ,strong) UIImage *nomalBackgroundImage;
+
+@property (nonatomic ,strong) UIImage *highlightedBackgroundImage;
+
 
 + (instancetype)actionWithTitle:(NSString *)title handler:(AlertActionNormalHandler)handler;
 
